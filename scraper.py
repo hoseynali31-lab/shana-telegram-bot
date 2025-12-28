@@ -1,8 +1,8 @@
 import requests
 import os
 
-BOT_TOKEN = os.getenv("BOT_TOKEN")
-CHAT_ID = os.getenv("CHAT_ID")
+BOT_TOKEN = 8371006264:AAHKeeQ5VochtU7pAQeqqGY4z_xALRHO9tM
+CHAT_ID = -1003562926125
 
 msg = "✅ تست ربات: همه چیز درست کار می‌کند."
 
