@@ -1,12 +1,13 @@
 from playwright.sync_api import sync_playwright
 import requests
 import jdatetime
+import os
 
 # ======================
 # تنظیمات
 # ======================
-BOT_TOKEN = "8371006264:AAHKeeQ5VochtU7pAQeqqGY4z_xALRHO9tM"
-CHAT_ID = "-1001234567890"
+BOT_TOKEN = os.getenv("BOT_TOKEN")  # از GitHub Secrets
+CHAT_ID = os.getenv("CHAT_ID")      # از GitHub Secrets
 
 KEYWORDS = [
     "مکانیکال کانکتور",
