@@ -6,8 +6,8 @@ import os
 # ======================
 # تنظیمات
 # ======================
-BOT_TOKEN = os.getenv("BOT_TOKEN")  # از GitHub Secrets
-CHAT_ID = os.getenv("CHAT_ID")      # از GitHub Secrets
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+CHAT_ID = os.getenv("CHAT_ID")
 
 KEYWORDS = [
     "مکانیکال کانکتور",
@@ -25,7 +25,6 @@ today_j = jdatetime.date.today()
 MONTHS = ["فروردین","اردیبهشت","خرداد","تیر","مرداد","شهریور",
           "مهر","آبان","آذر","دی","بهمن","اسفند"]
 today_text = f"{today_j.day} {MONTHS[today_j.month-1]} {today_j.year}"
-# مثال خروجی: "۷ دی ۱۴۰۴"
 
 # ======================
 # تابع ارسال به تلگرام
@@ -43,8 +42,6 @@ with sync_playwright() as p:
     browser = p.chromium.launch(headless=True)
     page = browser.new_page()
     page.goto(URL, timeout=60000)
-    page.click("input[value='جستجو']")  # کلیک روی دکمه جستجو
-    page.wait_for_timeout(4000)
 
     # پیدا کردن تعداد کل صفحات
     pages = page.query_selector_all("div.ui-paginator-pages span")
@@ -56,19 +53,15 @@ with sync_playwright() as p:
     for p_num in range(start_page, total_pages + 1):
         if p_num > 1:
             page.click(f"text='{p_num}'")
-            page.wait_for_timeout(3000)
+            page.wait_for_timeout(3000)  # صبر برای بارگذاری صفحه
 
         rows = page.query_selector_all("table tbody tr")
         for row in rows:
             cells = row.query_selector_all("td")
-            if len(cells) < 3:
+            if len(cells) < 2:
                 continue
 
-            date_text = cells[2].inner_text().strip()  # ستون تاریخ
-            if date_text != today_text:
-                continue  # فقط آگهی‌های امروز
-
-            title_text = cells[1].inner_text().strip()
+            title_text = cells[1].inner_text().strip()  # ستون عنوان
             if any(k.lower() in title_text.lower() for k in KEYWORDS):
                 titles.append(title_text)
 
@@ -78,10 +71,10 @@ with sync_playwright() as p:
 # ارسال پیام
 # ======================
 if titles:
-    msg = "📌 آگهی‌های امروز (۵ صفحه آخر):\n\n"
+    msg = "📌 آگهی‌های مرتبط (۵ صفحه آخر):\n\n"
     for i, t in enumerate(titles, 1):
         msg += f"{i}. {t}\n"
 else:
-    msg = "❌ امروز آگهی مرتبطی پیدا نشد."
+    msg = "❌ آگهی مرتبطی پیدا نشد."
 
 send_telegram(msg)
