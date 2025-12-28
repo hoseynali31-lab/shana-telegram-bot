@@ -18,4 +18,4 @@ jobs:
 
       # اجرای فایل تست
       - name: Run test bot
-        run: python test_bot.py
+        run: python scraper.py
